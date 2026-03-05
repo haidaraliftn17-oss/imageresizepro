@@ -1,23 +1,110 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>ImageResizePro</title>
+<style>
+body{
+font-family: Arial;
+text-align:center;
+background:#f2f2f2;
+}
+
+.container{
+background:white;
+padding:20px;
+margin:50px auto;
+width:350px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+button{
+padding:10px 20px;
+background:blue;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:darkblue;
+}
+</style>
 </head>
 
 <body>
 
-<h1>ImageResizePro</h1>
-<p>Upload image and resize or convert easily.</p>
+<div class="container">
+<h2>ImageResizePro</h2>
+<p>Resize your image easily</p>
 
-<input type="file">
-
-<br><br>
-
-<button>Convert</button>
+<input type="file" id="upload">
 
 <br><br>
 
-<button>Download</button>
+<label>Width:</label>
+<input type="number" id="width" placeholder="Width">
+
+<br><br>
+
+<label>Height:</label>
+<input type="number" id="height" placeholder="Height">
+
+<br><br>
+
+<button onclick="resizeImage()">Resize Image</button>
+
+<br><br>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<br>
+
+<a id="download" style="display:none;">Download Image</a>
+
+</div>
+
+<script>
+function resizeImage(){
+
+let file = document.getElementById("upload").files[0];
+let width = document.getElementById("width").value;
+let height = document.getElementById("height").value;
+
+let reader = new FileReader();
+
+reader.onload = function(event){
+
+let img = new Image();
+
+img.onload = function(){
+
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
+canvas.width = width;
+canvas.height = height;
+
+ctx.drawImage(img,0,0,width,height);
+
+let link = document.getElementById("download");
+link.href = canvas.toDataURL();
+link.download = "resized-image.png";
+link.innerHTML = "Download Image";
+link.style.display="block";
+
+}
+
+img.src = event.target.result;
+
+}
+
+reader.readAsDataURL(file);
+
+}
+</script>
 
 </body>
 </html>
