@@ -131,3 +131,41 @@ document.getElementById("kbgb").innerHTML=gb+" GB";
 
 </body>
 </html>
+function resizeImage(){
+
+var file=document.getElementById("upload").files[0];
+var width=document.getElementById("width").value;
+var height=document.getElementById("height").value;
+
+var reader=new FileReader();
+
+reader.onload=function(e){
+
+var img=new Image();
+
+img.onload=function(){
+
+var canvas=document.getElementById("canvas");
+var ctx=canvas.getContext("2d");
+
+canvas.width=width;
+canvas.height=height;
+
+ctx.drawImage(img,0,0,width,height);
+
+var link=document.getElementById("download");
+
+link.href=canvas.toDataURL();
+link.download="resized-image.png";
+link.style.display="block";
+link.innerHTML="Download Image";
+
+}
+
+img.src=e.target.result;
+
+}
+
+reader.readAsDataURL(file);
+
+}
