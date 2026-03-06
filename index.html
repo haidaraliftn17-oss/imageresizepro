@@ -37,7 +37,6 @@ padding:5px;
 margin:5px;
 }
 </style>
-
 </head>
 
 <body>
@@ -60,9 +59,7 @@ margin:5px;
 <br><br>
 
 <canvas id="canvas" style="display:none;"></canvas>
-
 <br>
-
 <a id="download" style="display:none;">Download Image</a>
 
 <hr>
@@ -72,9 +69,6 @@ margin:5px;
 <button onclick="kbToMb()">Convert</button>
 <p id="kbmb"></p>
 
-</div>
-
-<script>
 <h3>MB to KB Converter</h3>
 <input type="number" id="mb">
 <button onclick="mbToKb()">Convert</button>
@@ -94,8 +88,12 @@ margin:5px;
 <input type="number" id="kb2">
 <button onclick="kbToGb()">Convert</button>
 <p id="kbgb"></p>
-function resizeImage(){
 
+</div>
+
+<script>
+
+function resizeImage(){
 var file=document.getElementById("upload").files[0];
 var width=document.getElementById("width").value;
 var height=document.getElementById("height").value;
@@ -103,11 +101,9 @@ var height=document.getElementById("height").value;
 var reader=new FileReader();
 
 reader.onload=function(e){
-
 var img=new Image();
 
 img.onload=function(){
-
 var canvas=document.getElementById("canvas");
 var ctx=canvas.getContext("2d");
 
@@ -117,20 +113,16 @@ canvas.height=height;
 ctx.drawImage(img,0,0,width,height);
 
 var link=document.getElementById("download");
-
 link.href=canvas.toDataURL();
 link.download="resized-image.png";
 link.style.display="block";
 link.innerHTML="Download Image";
-
 }
 
 img.src=e.target.result;
-
 }
 
 reader.readAsDataURL(file);
-
 }
 
 function kbToMb(){
@@ -139,26 +131,31 @@ var mb=kb/1024;
 document.getElementById("kbmb").innerHTML=mb+" MB";
 }
 
+function mbToKb(){
+var mb=document.getElementById("mb").value;
+var kb=mb*1024;
+document.getElementById("mbkb").innerHTML=kb+" KB";
+}
+
+function mbToGb(){
+var mb=document.getElementById("mb2").value;
+var gb=mb/1024;
+document.getElementById("mbgb").innerHTML=gb+" GB";
+}
+
+function gbToMb(){
+var gb=document.getElementById("gb").value;
+var mb=gb*1024;
+document.getElementById("gbmb").innerHTML=mb+" MB";
+}
+
+function kbToGb(){
+var kb=document.getElementById("kb2").value;
+var gb=kb/(1024*1024);
+document.getElementById("kbgb").innerHTML=gb+" GB";
+}
+
 </script>
 
 </body>
 </html>
-<h3>MB to KB Converter</h3>
-<input type="number" id="mb">
-<button onclick="mbToKb()">Convert</button>
-<p id="mbkb"></p>
-
-<h3>MB to GB Converter</h3>
-<input type="number" id="mb2">
-<button onclick="mbToGb()">Convert</button>
-<p id="mbgb"></p>
-
-<h3>GB to MB Converter</h3>
-<input type="number" id="gb">
-<button onclick="gbToMb()">Convert</button>
-<p id="gbmb"></p>
-
-<h3>KB to GB Converter</h3>
-<input type="number" id="kb2">
-<button onclick="kbToGb()">Convert</button>
-<p id="kbgb"></p>
