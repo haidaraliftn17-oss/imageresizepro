@@ -1,171 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>ImageResizePro</title>
+function resizeImage(){
 
-<style>
-body{
-font-family:Arial;
-text-align:center;
-background:#f2f2f2;
+var file = document.getElementById("upload").files[0];
+
+if(!file){
+alert("Please upload an image");
+return;
 }
 
-.container{
-background:white;
-padding:20px;
-margin:50px auto;
-width:400px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
+var width = document.getElementById("width").value;
+var height = document.getElementById("height").value;
 
-button{
-padding:10px 20px;
-background:blue;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-button:hover{
-background:darkblue;
-}
-
-input{
-padding:5px;
-margin:5px;
-}
-
-/* Drag & Drop Box */
-
-#drop-area{
-border:2px dashed #4a6cff;
-padding:50px;
-margin-bottom:20px;
-border-radius:12px;
-background:#fafafa;
-cursor:pointer;
-font-size:16px;
-transition:0.3s;
-}
-
-#drop-area.hover{
-background:#eef3ff;
-}
-
-#preview{
-max-width:100%;
-margin-top:15px;
-display:none;
-border-radius:8px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h2>ImageResizePro</h2>
-<p>Resize your image easily</p>
-
-<div id="drop-area">
-<p>Drag & Drop Image Here</p>
-<p>or click to upload</p>
-<input type="file" id="upload" accept="image/*">
-</div>
-
-<img id="preview">
-
-<label>Width:</label>
-<input type="number" id="width"><br><br>
-
-<label>Height:</label>
-<input type="number" id="height"><br><br>
-
-<button onclick="resizeImage()">Resize Image</button>
-
-<br><br>
-
-<canvas id="canvas" style="display:none;"></canvas>
-<br>
-<a id="download" style="display:none;">Download Image</a>
-
-<hr>
-
-<h3>KB to MB Converter</h3>
-<input type="number" id="kb">
-<button onclick="kbToMb()">Convert</button>
-<p id="kbmb"></p>
-
-<h3>MB to KB Converter</h3>
-<input type="number" id="mb">
-<button onclick="mbToKb()">Convert</button>
-<p id="mbkb"></p>
-
-<h3>MB to GB Converter</h3>
-<input type="number" id="mb2">
-<button onclick="mbToGb()">Convert</button>
-<p id="mbgb"></p>
-
-<h3>GB to MB Converter</h3>
-<input type="number" id="gb">
-<button onclick="gbToMb()">Convert</button>
-<p id="gbmb"></p>
-
-<h3>KB to GB Converter</h3>
-<input type="number" id="kb2">
-<button onclick="kbToGb()">Convert</button>
-<p id="kbgb"></p>
-
-</div>
-
-<script>
-
-let dropArea = document.getElementById("drop-area");
-let fileInput = document.getElementById("upload");
-let preview = document.getElementById("preview");
-
-/* Drag events */
-
-dropArea.addEventListener("dragover", function(e){
-e.preventDefault();
-dropArea.classList.add("hover");
-});
-
-dropArea.addEventListener("dragleave", function(){
-dropArea.classList.remove("hover");
-});
-
-dropArea.addEventListener("drop", function(e){
-e.preventDefault();
-dropArea.classList.remove("hover");
-
-fileInput.files = e.dataTransfer.files;
-fileInput.dispatchEvent(new Event('change'));
-});
-
-/* Image preview + auto size */
-
-fileInput.addEventListener("change", function(){
-
-let file = fileInput.files[0];
-
-if(!file) return;
-
-let reader = new FileReader();
+var reader = new FileReader();
 
 reader.onload = function(e){
 
-preview.src = e.target.result;
-preview.style.display = "block";
-
-let img = new Image();
+var img = new Image();
 
 img.onload = function(){
-document.getElementById("width").value = img.width;
-document.getElementById("height").value = img.height;
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+canvas.width = width;
+canvas.height = height;
+
+ctx.drawImage(img,0,0,width,height);
+
+/* Target size 50 KB */
+var targetSize = 50 * 1024;
+var quality = 0.9;
+var dataURL;
+var size;
+
+do{
+dataURL = canvas.toDataURL("image/jpeg", quality);
+size = Math.round((dataURL.length * 3)/4);
+quality -= 0.05;
+}while(size > targetSize && quality > 0.1);
+
+var link = document.getElementById("download");
+link.href = dataURL;
+link.download = "compressed-image.jpg";
+link.style.display = "block";
+link.innerHTML = "Download Image";
+
 }
 
 img.src = e.target.result;
@@ -174,82 +52,4 @@ img.src = e.target.result;
 
 reader.readAsDataURL(file);
 
-});
-
-/* Resize */
-
-function resizeImage(){
-
-var file=document.getElementById("upload").files[0];
-
-if(!file){
-alert("Please upload an image");
-return;
 }
-
-var width=document.getElementById("width").value;
-var height=document.getElementById("height").value;
-
-var reader=new FileReader();
-
-reader.onload=function(e){
-var img=new Image();
-
-img.onload=function(){
-var canvas=document.getElementById("canvas");
-var ctx=canvas.getContext("2d");
-
-canvas.width=width;
-canvas.height=height;
-
-ctx.drawImage(img,0,0,width,height);
-
-var link=document.getElementById("download");
-link.href=canvas.toDataURL();
-link.download="resized-image.png";
-link.style.display="block";
-link.innerHTML="Download Image";
-}
-
-img.src=e.target.result;
-}
-
-reader.readAsDataURL(file);
-}
-
-/* Converters */
-
-function kbToMb(){
-var kb=document.getElementById("kb").value;
-var mb=kb/1024;
-document.getElementById("kbmb").innerHTML=mb+" MB";
-}
-
-function mbToKb(){
-var mb=document.getElementById("mb").value;
-var kb=mb*1024;
-document.getElementById("mbkb").innerHTML=kb+" KB";
-}
-
-function mbToGb(){
-var mb=document.getElementById("mb2").value;
-var gb=mb/1024;
-document.getElementById("mbgb").innerHTML=gb+" GB";
-}
-
-function gbToMb(){
-var gb=document.getElementById("gb").value;
-var mb=gb*1024;
-document.getElementById("gbmb").innerHTML=mb+" MB";
-}
-
-function kbToGb(){
-var kb=document.getElementById("kb2").value;
-var gb=kb/(1024*1024);
-document.getElementById("kbgb").innerHTML=gb+" GB";
-}
-
-</script>
-
-</body>
-</html>
