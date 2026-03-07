@@ -39,17 +39,32 @@ margin:5px;
 
 #drop-area{
 border:2px dashed #4a6cff;
-padding:50px;
+padding:40px;
 margin-bottom:20px;
 border-radius:12px;
-background:#fafafa;
+background:#eef3ff;
 cursor:pointer;
 font-size:16px;
 transition:0.3s;
 }
 
 #drop-area.hover{
-background:#eef3ff;
+background:#dfe7ff;
+}
+
+.upload-btn{
+display:inline-block;
+margin-top:10px;
+padding:10px 20px;
+background:#4a6cff;
+color:white;
+border-radius:6px;
+cursor:pointer;
+font-size:15px;
+}
+
+.upload-btn:hover{
+background:#324ed1;
 }
 
 #preview{
@@ -71,8 +86,11 @@ border-radius:8px;
 
 <div id="drop-area">
 <p>Drag & Drop Image Here</p>
-<p>or click to upload</p>
-<input type="file" id="upload" accept="image/*">
+<p>or</p>
+
+<label for="upload" class="upload-btn">Select Image</label>
+<input type="file" id="upload" accept="image/*" hidden>
+
 </div>
 
 <img id="preview">
