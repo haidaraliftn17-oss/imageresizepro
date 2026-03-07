@@ -36,6 +36,21 @@ input{
 padding:5px;
 margin:5px;
 }
+
+/* Drag & Drop Box */
+
+#drop-area{
+border:2px dashed #888;
+padding:30px;
+margin-bottom:15px;
+border-radius:10px;
+background:#fafafa;
+cursor:pointer;
+}
+
+#drop-area.hover{
+background:#e8f0ff;
+}
 </style>
 </head>
 
@@ -46,7 +61,11 @@ margin:5px;
 <h2>ImageResizePro</h2>
 <p>Resize your image easily</p>
 
-<input type="file" id="upload"><br><br>
+<div id="drop-area">
+<p>Drag & Drop Image Here</p>
+<p>or click to upload</p>
+<input type="file" id="upload" accept="image/*">
+</div>
 
 <label>Width:</label>
 <input type="number" id="width"><br><br>
@@ -93,8 +112,34 @@ margin:5px;
 
 <script>
 
+let dropArea = document.getElementById("drop-area");
+let fileInput = document.getElementById("upload");
+
+dropArea.addEventListener("dragover", function(e){
+e.preventDefault();
+dropArea.classList.add("hover");
+});
+
+dropArea.addEventListener("dragleave", function(){
+dropArea.classList.remove("hover");
+});
+
+dropArea.addEventListener("drop", function(e){
+e.preventDefault();
+dropArea.classList.remove("hover");
+
+fileInput.files = e.dataTransfer.files;
+});
+
 function resizeImage(){
+
 var file=document.getElementById("upload").files[0];
+
+if(!file){
+alert("Please upload an image");
+return;
+}
+
 var width=document.getElementById("width").value;
 var height=document.getElementById("height").value;
 
